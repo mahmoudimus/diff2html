@@ -50,12 +50,16 @@ TD.removed { background-color: #FFCCCC; }
 TD.normal { background-color: #FFFFE1; }
 """
 
+
 class HelpDesc(IndentedHelpFormatter):
+
     def _format_text(self, text):
         """Don't reformat the fucking text"""
         return text
 
+
 class DiffOptionParser(OptionParser):
+
     def _process_args(self, largs, rargs, values):
         """_process_args(largs : [string],
                          rargs : [string],
@@ -96,6 +100,7 @@ class DiffOptionParser(OptionParser):
             else:
                 return                  # stop now, leave this arg in rarg
 
+
 def _get_option_parser():
     usage = "%prog [options] file1 file2"
     desc = """\
@@ -133,8 +138,8 @@ def _get_option_parser():
            <mahmoud@linux.com>.
            """
     desc = dedent(desc)
-    epilogue = dedent(epilogue) % { "prog" : os.path.basename(sys.argv[0]),
-                                    "default_css" : default_css }
+    epilogue = dedent(epilogue) % {"prog": os.path.basename(sys.argv[0]),
+                                   "default_css": default_css}
     parser = DiffOptionParser(usage=usage,
                               description=desc,
                               formatter=HelpDesc(),
@@ -145,12 +150,13 @@ def _get_option_parser():
                       help="Use an alternate style sheet, linked to the "
                            "given file")
     parser.add_option("--embeddable", action="store_true",
-                      help="Allow diff colorizaton only such that it can be" 
+                      help="Allow diff colorizaton only such that it can be"
                            "embeddable")
 
     return parser
 
-def str2html(s) :
+
+def str2html(s):
     s1 = s.replace(s.rstrip(), "&", "&amp;")
     if not s1:
         return s1
@@ -165,6 +171,7 @@ def str2html(s) :
     s2 += s1[i:]
     return s2
 
+
 def str_differ(arglist, options):
     diffstr_first, diffstr_second = arglist[-2:]
     tmp_file1 = tempfile.NamedTemporaryFile()
@@ -173,14 +180,16 @@ def str_differ(arglist, options):
     tmp_file2.write(diffstr_second)
     tmp_file1.flush()
     tmp_file2.flush()
-    results = file_differ(arglist[:-2]+[tmp_file1.name, tmp_file2.name],
+    results = file_differ(arglist[:-2] + [tmp_file1.name, tmp_file2.name],
                           options)
     tmp_file1.close()
     tmp_file2.close()
     return results
 
+
 class DiffException(Exception):
     pass
+
 
 def file_differ(arglist, options):
     """Options can be anything such that getattr(options, option) works"""
@@ -197,11 +206,12 @@ def file_differ(arglist, options):
     added = {}
     # Magic regular expression
     diff_re = re.compile(
-        r"^(?P<f1_start>\d+)(,(?P<f1_end>\d+))?"+ \
-         "(?P<diff>[acd])"+ \
+        r"^(?P<f1_start>\d+)(,(?P<f1_end>\d+))?" + \
+         "(?P<diff>[acd])" + \
          "(?P<f2_start>\d+)(,(?P<f2_end>\d+))?")
 
     print type(stdout)
+
 
 if __name__ == '__main__':
     parser = _get_option_parser()
